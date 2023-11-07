@@ -1,3 +1,1 @@
-# client
-
-ExtWS client.
+# extws-client
