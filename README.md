@@ -1,3 +1,3 @@
 # client
 
-ExtWS client
+ExtWS client.
