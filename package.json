@@ -1,6 +1,6 @@
 {
 	"name": "@extws/client",
-	"version": "0.1.0-beta.4",
+	"version": "0.1.0-beta.5",
 	"description": "Client for ExtWS",
 	"publishConfig": {
 		"access": "public",
@@ -32,8 +32,8 @@
 		"eslint-plugin-unicorn": "47.0.0"
 	},
 	"scripts": {
-		"test-node": "NODE_TLS_REJECT_UNAUTHORIZED=0 node test/main.js",
-		"test-bun": "NODE_TLS_REJECT_UNAUTHORIZED=0 bun run test/main.js",
+		"test-node": "VERBOSE=1 NODE_TLS_REJECT_UNAUTHORIZED=0 node test/main.js",
+		"test-bun": "VERBOSE=1 NODE_TLS_REJECT_UNAUTHORIZED=0 bun run test/main.js",
 		"build": "bun run build-full && bun run build-minified",
 		"build-full": "OUT=extws-client.js bun run make/bun.build.js",
 		"build-minified": "OUT=extws-client.min.js MINIFY=1 bun run make/bun.build.js"

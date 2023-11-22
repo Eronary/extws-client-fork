@@ -78,7 +78,7 @@ var main_default = (storage = {}) => ({
 var { WebSocket } = self;
 function createWebSocket({ url, headers }) {
   if (headers) {
-    console.warn("Headers are not supported while using WebSocket in browser. They will be ignored.");
+    console.warn("[ExtWSClient] Headers are not supported while using WebSocket in browser. They will be ignored.");
   }
   return new WebSocket(url);
 }
@@ -117,17 +117,15 @@ class ExtWSClient {
   #timeout_id_reconnect = null;
   url;
   options = {};
-  constructor(value) {
-    if (isPlainObject(value)) {
-      this.url = parseUrl(value.url);
-      delete value.url;
-      this.options = Object.freeze(value);
-    } else {
-      this.url = parseUrl(value);
-    }
+  constructor(url, options = {}) {
+    this.url = parseUrl(url);
     if (this.url instanceof URL !== true) {
       throw new TypeError("Invalid URL.");
     }
+    if (isPlainObject(options) !== true) {
+      throw new TypeError("Options must be an Object or not defined at all.");
+    }
+    this.options = options;
     if (this.#getOption("connect") === true) {
       setTimeout(() => this.connect());
     }
@@ -143,7 +141,7 @@ class ExtWSClient {
     return this.options[key] ?? OPTIONS_DEFAULT[key];
   }
   get is_connected() {
-    return this.#websocket && BROKEN_STATES.has(this.#websocket.readyState) !== true && Date.now() - this.#websocket[SYMBOL_EXTWS].ts_last_message < this.#websocket[SYMBOL_EXTWS].idle_timeout;
+    return this.#websocket && BROKEN_STATES.has(this.#websocket.readyState) !== true && typeof this.id === "string" && Date.now() - this.#websocket[SYMBOL_EXTWS].ts_last_message < this.#websocket[SYMBOL_EXTWS].idle_timeout;
   }
   get id() {
     return this.#websocket[SYMBOL_EXTWS].socket_id;

@@ -24,20 +24,16 @@ export class ExtWSClient {
 	url;
 	options = {};
 
-	constructor(value) {
-		if (isPlainObject(value)) {
-			this.url = parseUrl(value.url);
-			delete value.url;
-
-			this.options = Object.freeze(value);
-		}
-		else {
-			this.url = parseUrl(value);
-		}
-
+	constructor(url, options = {}) {
+		this.url = parseUrl(url);
 		if (this.url instanceof URL !== true) {
 			throw new TypeError('Invalid URL.');
 		}
+
+		if (isPlainObject(options) !== true) {
+			throw new TypeError('Options must be an Object or not defined at all.');
+		}
+		this.options = options;
 
 		if (this.#getOption('connect') === true) {
 			setTimeout(
@@ -69,6 +65,7 @@ export class ExtWSClient {
 	get is_connected() {
 		return this.#websocket
 			&& BROKEN_STATES.has(this.#websocket.readyState) !== true
+			&& typeof this.id === 'string'
 			&& Date.now() - this.#websocket[SYMBOL_EXTWS].ts_last_message < this.#websocket[SYMBOL_EXTWS].idle_timeout;
 	}
 
