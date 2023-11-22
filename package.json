@@ -1,6 +1,6 @@
 {
 	"name": "@extws/client",
-	"version": "0.1.0-beta.1",
+	"version": "0.1.0-beta.4",
 	"description": "Client for ExtWS",
 	"publishConfig": {
 		"access": "public",
@@ -8,6 +8,15 @@
 	},
 	"type": "module",
 	"main": "src/main.js",
+	"exports": {
+		".": {
+			"import": {
+				"browser": "./dist/extws-client.js",
+				"default": "./src/main.js"
+			}
+		},
+		"./browser": "./dist/extws-client.js"
+	},
 	"dependencies": {
 		"@extws/server": "0.1.0-beta.8",
 		"@kirick/event-emitter": "3.0.0",

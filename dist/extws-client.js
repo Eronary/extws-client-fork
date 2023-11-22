@@ -75,7 +75,7 @@ var main_default = (storage = {}) => ({
 });
 
 // src/websocket.js
-var { WebSocket } = window;
+var { WebSocket } = self;
 function createWebSocket({ url, headers }) {
   if (headers) {
     console.warn("Headers are not supported while using WebSocket in browser. They will be ignored.");

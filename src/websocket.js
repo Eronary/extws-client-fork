@@ -1,15 +1,6 @@
 
 import WS from 'ws';
 
-const IS_WEBSOCKET_GLOBAL = (() => {
-	try {
-		return 'WebSocket' in global;
-	}
-	catch {}
-
-	return false;
-})();
-
 const IS_BUN = (() => {
 	try {
 		return 'Bun' in global;
@@ -19,7 +10,22 @@ const IS_BUN = (() => {
 	return false;
 })();
 
-export const WebSocket = IS_WEBSOCKET_GLOBAL ? global.WebSocket : WS;
+const WebSocketNative = (() => {
+	try {
+		return global.WebSocket;
+	}
+	catch {}
+
+	// browser Window and ServiceWorkerGlobalScope
+	try {
+		return self.WebSocket;
+	}
+	catch {}
+
+	return null;
+})();
+
+export const WebSocket = WebSocketNative ?? WS;
 
 export default function createWebSocket({ url, headers }) {
 	if (IS_BUN) {
@@ -33,7 +39,7 @@ export default function createWebSocket({ url, headers }) {
 		);
 	}
 
-	if (IS_WEBSOCKET_GLOBAL) {
+	if (WebSocketNative !== null) {
 		console.log('[websocket.js] Using global WebSocket in unknown environment...');
 
 		if (headers) {

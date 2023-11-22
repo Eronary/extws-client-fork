@@ -1,5 +1,5 @@
 
-export const { WebSocket } = window;
+export const { WebSocket } = self;
 
 export default function createWebSocket({ url, headers }) {
 	if (headers) {
