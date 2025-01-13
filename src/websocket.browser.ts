@@ -1,6 +1,4 @@
-import type { Options } from './websocket.ts';
-
-export const LocalWebSocket = WebSocket;
+import type { Options } from './websocket.js';
 
 /**
  * Create a new WebSocket connection in the browser.

@@ -14,7 +14,8 @@
 		"module": "nodenext",
 		"lib": [
 			"ESNext",
-			"ES2021.String"
+			"ES2021.String",
+			"DOM"
 		],
 		"allowSyntheticDefaultImports": true,
 		"skipLibCheck": true,

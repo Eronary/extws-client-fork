@@ -1,10 +1,9 @@
 {
 	"name": "@extws/client",
-	"version": "0.1.0-beta.5",
+	"version": "0.2.0-beta.1",
 	"description": "Client for ExtWS",
 	"publishConfig": {
-		"access": "public",
-		"tag": "beta"
+		"access": "public"
 	},
 	"type": "module",
 	"main": "dist/esm/main.js",
@@ -16,28 +15,28 @@
 		}
 	},
 	"dependencies": {
-		"@extws/server": "0.2.0-beta.7",
-		"@kirick/event-emitter": "3.0.3",
+		"@extws/server": "0.2.0-beta.9",
+		"@kirick/ip": "^0.1.1",
 		"@types/bun": "^1.1.13",
 		"@types/ws": "^8.5.13",
+		"neoevents": "0.1.0",
 		"ws": "^8.18.0"
 	},
 	"devDependencies": {
 		"@extws/server-bun": "^0.2.0-beta.2",
-		"@kirick/eslint-config": "latest",
+		"@kirick/eslint-config": "0.1.30",
 		"@types/node": "^22.9.0",
-		"vitest": "^2.1.2"
-	},
-	"peerDependencies": {
-		"@kirick/ip": "^0.1.1"
+		"eslint": "9.10.0",
+		"typescript": "5.5.4",
+		"vitest": "2.1.2"
 	},
 	"scripts": {
-		"build": "rm -r dist ; bun run build:ts && bun run build:cjs",
-		"build:cjs": "bunx esbuild --bundle --platform=node --format=cjs --packages=external --outfile=dist/main.cjs dist/esm/main.js",
-		"build:ts": "rm -r dist/esm ; tsc",
+		"build": "rm -r dist ; bun run build:ts && bun run build:cjs && bun run build:browser",
+		"build:browser": "rm -r dist/browser ; bun run build.ts",
+		"build:cjs": "bun build src/main.ts --outfile=dist/main.cjs --platform=node --format=cjs --packages=external",
+		"build:ts": "rm -r dist/esm ; tsc && rm dist/esm/websocket.browser.*",
 		"lint": "eslint . && tsc --skipLibCheck --noemit",
-		"publish:npm": "bun run build && bun run lint && bun run test && npm publish",
-		"test": "vitest run --no-file-parallelism"
+		"publish:npm": "bun run build && bun run lint && bun run test && npm publish"
 	},
 	"repository": {
 		"type": "git",

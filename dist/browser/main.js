@@ -91,46 +91,43 @@ var OutcomePayloadEventType;
   OutcomePayloadEventType2["GROUP"] = "p.group";
   OutcomePayloadEventType2["BROADCAST"] = "p.broadcast";
 })(OutcomePayloadEventType || (OutcomePayloadEventType = {}));
-// src/neoevent.ts
-class NeoEvent extends Event {
-  data;
-  constructor(type, data) {
-    super(type);
-    this.data = data;
+// node_modules/neoevents/dist/esm/main.js
+class m extends Event {
+  h;
+  constructor(g, h) {
+    super(g);
+    this.detail = h;
   }
 }
 
-class NeoEventTarget extends EventTarget {
+class q extends EventTarget {
   listeners = new Set;
-  addListener(type, listener, options) {
-    this.addEventListener(type, listener, options);
-    const off = () => {
-      this.removeEventListener(type, listener, options);
-      this.listeners.delete(off);
+  addListener(g, h, j) {
+    this.addEventListener(g, h, j);
+    let k = () => {
+      this.removeEventListener(g, h, j), this.listeners.delete(k);
     };
-    this.listeners.add(off);
-    return off;
+    return this.listeners.add(k), k;
   }
-  on(type, listener) {
-    return this.addListener(type, listener);
+  on(g, h) {
+    return this.addListener(g, h);
   }
-  once(type, listener) {
-    return this.addListener(type, listener, { once: true });
+  once(g, h) {
+    return this.addListener(g, h, { once: true });
   }
-  wait(type) {
-    return new Promise((resolve) => {
-      this.once(type, (event) => {
-        resolve(event);
+  wait(g) {
+    return new Promise((h) => {
+      this.once(g, (j) => {
+        h(j);
       });
     });
   }
-  emit(type, data) {
-    this.dispatchEvent(new NeoEvent(type, data));
+  emit(g, h) {
+    this.dispatchEvent(new m(g, h));
   }
   destroy() {
-    for (const off of this.listeners) {
-      off();
-    }
+    for (let g of this.listeners)
+      g();
     this.listeners.clear();
   }
 }
@@ -142,18 +139,17 @@ function createWebsocket(options) {
   }
   return new WebSocket(options.url);
 }
-var LocalWebSocket = WebSocket;
 
 // src/main.ts
 function isPlainObject(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value) && value.constructor === Object;
 }
 var BROKEN_STATES = new Set([
-  LocalWebSocket.CLOSING,
-  LocalWebSocket.CLOSED
+  2,
+  3
 ]);
 
-class ExtWSClient extends NeoEventTarget {
+class ExtWSClient extends q {
   websocket = null;
   websocket_state = null;
   url;
@@ -279,6 +275,5 @@ class ExtWSClient extends NeoEventTarget {
   }
 }
 export {
-  ExtWSClient,
-  BROKEN_STATES
+  ExtWSClient
 };

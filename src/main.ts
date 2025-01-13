@@ -4,15 +4,15 @@ import {
 	PayloadData,
 	PayloadType,
 } from '@extws/server/dev';
-import { NeoEventTarget } from './neoevent.js';
+import { NeoEventTarget } from 'neoevents';
 import {
 	createWebsocket,
-	LocalWebSocket,
+	type LocalWebSocketType,
 } from './websocket.js';
 
-export const BROKEN_STATES = new Set<number>([
-	LocalWebSocket.CLOSING,
-	LocalWebSocket.CLOSED,
+const BROKEN_STATES = new Set<number>([
+	2, // CLOSING
+	3, // CLOSED
 ]);
 
 interface ClientOptions {
@@ -34,6 +34,11 @@ interface ExtWSClientTimeouts {
 	reconnect?: ReturnType<typeof setTimeout>;
 }
 
+/**
+ * I
+ * @param value - The value to check
+ * @returns -Whether the value is a plain object
+ */
 function isPlainObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object'
 		&& value !== null
@@ -42,7 +47,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 export class ExtWSClient extends NeoEventTarget {
-	private websocket: WebSocket | null = null;
+	private websocket: LocalWebSocketType | null = null;
 	private websocket_state: WebsocketState | null = null;
 	url: URL;
 	headers: Record<string, string> = {};
@@ -54,7 +59,10 @@ export class ExtWSClient extends NeoEventTarget {
 	};
 	private timeouts: ExtWSClientTimeouts = {};
 
-	constructor(url: URL, options?: ClientOptions) {
+	constructor(
+		url: URL,
+		options?: Partial<ClientOptions>,
+	) {
 		super();
 
 		this.url = url;
